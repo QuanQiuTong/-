@@ -15,7 +15,7 @@ struct mat
         for (int i = 0; i < sz; ++i)
             for (int j = 0; j < sz; ++j)
             {
-                res.a[i][j] = (a[i][j] - T.a[i][j]);
+                res.a[i][j] = (a[i][j] - T.a[i][j]) % m;
             }
         return res;
     }
@@ -26,7 +26,7 @@ struct mat
         for (int i = 0; i < sz; ++i)
             for (int j = 0; j < sz; ++j)
             {
-                res.a[i][j] = (a[i][j] + T.a[i][j]);
+                res.a[i][j] = (a[i][j] + T.a[i][j]) % m;
             }
         return res;
     }
@@ -47,12 +47,9 @@ struct mat
 
     inline mat operator^(LL x) const
     {
-        mat res, bas;
+        mat res, bas = *this;
         for (int i = 0; i < sz; ++i)
             res.a[i][i] = 1;
-        for (int i = 0; i < sz; ++i)
-            for (int j = 0; j < sz; ++j)
-                bas.a[i][j] = a[i][j];
         while (x)
         {
             if (x & 1)
@@ -63,17 +60,6 @@ struct mat
         return res;
     }
 };
-mat qpow(mat A, int n)
-{
-    mat res;
-    for (size_t i = 0; i < mat::sz; i++)
-        res.a[i][i] = 1;
-
-    for (; n; n >>= 1, A = A * A)
-        if (n & 1)
-            res = res * A;
-    return res;
-}
 int main()
 {
     for (int d, n; scanf("%d%d%d", &d, &n, &m), d && n && m;)
@@ -85,7 +71,7 @@ int main()
             scanf("%lld", &A.a[d - 1][d - 1 - j]);
         for (int i = 0; i < d; ++i)
             scanf("%lld", &F.a[i][0]);
-        printf("%lld\n", (qpow(A, n - d) * F).a[d - 1][0]);
+        printf("%lld\n", ((A ^ (n - d)) * F).a[d - 1][0]);
     }
     return 0;
 }
