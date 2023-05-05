@@ -1,12 +1,16 @@
 #include <cstdio>
 #define read() ({int x,c,f=1;while((c=getchar())<48||57<c)if(c=='-')f=-1;for(x=c^48;47<(c=getchar())&&c<58;x=x*10+(c^48));x*f; })
-static unsigned hold = 1;
+inline int random()
+{
+    static unsigned hold = 1;
+    return ((hold = hold * 214013u + 2531011u) & 0x7fffffffl);
+}
 struct Node
 {
     Node *ch[2]; // 左右子树
     int r, v;    // 优先级，值
     int cnt, s;
-    Node(int _v) : v(_v), cnt(1), s(1), r((hold = hold * 214013u + 2531011u) & 0x7fffffffl) { ch[0] = ch[1] = 0; }
+    Node(int _v) : v(_v), cnt(1), s(1), r(random()) { ch[0] = ch[1] = 0; }
     void maintain()
     {
         s = cnt;
