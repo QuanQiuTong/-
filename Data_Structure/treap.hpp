@@ -1,4 +1,6 @@
 #pragma once
+#include <cstdio>
+#define read() ({int x,c;while((c=getchar())<48||57<c);for(x=c^48;47<(c=getchar())&&c<58;x=x*10+(c^48));x; })
 template <typename T>
 class Treap
 {
@@ -70,13 +72,15 @@ class Treap
     }
     static int _rank(Node *o, T x)
     {
+        if (o == NULL)
+            return 1;
         if (x < o->v)
-            return o->ch[0] ? _rank(o->ch[0], x) : 1;
+            return _rank(o->ch[0], x);
         int ls = o->ch[0] ? o->ch[0]->s : 0;
         if (x == o->v)
             return ls + 1;
         else
-            return o->ch[1] ? ls + o->cnt + _rank(o->ch[1], x) : o->cnt + 1;
+            return ls + o->cnt + _rank(o->ch[1], x);
     }
     static T _kth(Node *o, int k)
     {
@@ -117,13 +121,12 @@ public:
     int rank(T val) const { return _rank(rt, val); }
     T kth(int rank) const
     {
-        if (rt == NULL || rank <= 0 || rank > rt->s)
-            throw;
+        //if (rt == NULL || rank <= 0 || rank > rt->s) throw;
         return _kth(rt, rank);
     }
 };
 
-#if LOCAL || ONLINE_JUDGE
+#if P3369
 #include <cstdio>
 #define read() ({int x,c,f=1;while((c=getchar())<48||57<c)if(c=='-')f=-1;for(x=c^48;47<(c=getchar())&&c<58;x=x*10+(c^48));x*f; })
 Treap<int> t;
@@ -151,6 +154,42 @@ int main()
             printf("%d\n", t.next(read()));
             break;
         }
+    return 0;
+}
+#endif
+
+#if P6136
+#include <cstdio>
+#define read() ({int x,c,f=1;while((c=getchar())<48||57<c)if(c=='-')f=-1;for(x=c^48;47<(c=getchar())&&c<58;x=x*10+(c^48));x*f; })
+Treap<int> t;
+int main()
+{
+    int n = read(), m = read(), last = 0, sum = 0;
+    while (n--)
+        t.insert(read());
+    while (m--)
+        switch (read())
+        {
+        case 1:
+            t.insert(last ^ read());
+            break;
+        case 2:
+            t.remove(last ^ read());
+            break;
+        case 3:
+            sum ^= (last = t.rank(last ^ read()));
+            break;
+        case 4:
+            sum ^= (last = t.kth(last ^ read()));
+            break;
+        case 5:
+            sum ^= (last = t.prev(last ^ read()));
+            break;
+        case 6:
+            sum ^= (last = t.next(last ^ read()));
+            break;
+        }
+    printf("%d", sum);
     return 0;
 }
 #endif
