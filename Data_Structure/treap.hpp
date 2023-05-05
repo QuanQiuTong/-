@@ -72,15 +72,13 @@ class Treap
     }
     static int _rank(Node *o, T x)
     {
-        if (o == NULL)
-            return 1;
         if (x < o->v)
-            return _rank(o->ch[0], x);
+            return o->ch[0] ? _rank(o->ch[0], x) : 1;
         int ls = o->ch[0] ? o->ch[0]->s : 0;
         if (x == o->v)
             return ls + 1;
         else
-            return ls + o->cnt + _rank(o->ch[1], x);
+            return o->ch[1] ? ls + o->cnt + _rank(o->ch[1], x) : o->s + 1;
     }
     static T _kth(Node *o, int k)
     {
@@ -118,10 +116,10 @@ public:
     void remove(T val) { _remove(rt, val); }
     T prev(T val) const { return _prev(rt, val); }
     T next(T val) const { return _next(rt, val); }
-    int rank(T val) const { return _rank(rt, val); }
+    int rank(T val) const { return rt ? _rank(rt, val) : 1; }
     T kth(int rank) const
     {
-        //if (rt == NULL || rank <= 0 || rank > rt->s) throw;
+        // if (rt == NULL || rank <= 0 || rank > rt->s) throw;
         return _kth(rt, rank);
     }
 };
@@ -160,7 +158,7 @@ int main()
 
 #if P6136
 #include <cstdio>
-#define read() ({int x,c,f=1;while((c=getchar())<48||57<c)if(c=='-')f=-1;for(x=c^48;47<(c=getchar())&&c<58;x=x*10+(c^48));x*f; })
+#define read() ({int x,c;while((c=getchar())<48||57<c);for(x=c^48;47<(c=getchar())&&c<58;x=x*10+(c^48));x; })
 Treap<int> t;
 int main()
 {
