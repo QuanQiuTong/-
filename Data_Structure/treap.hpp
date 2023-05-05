@@ -123,7 +123,7 @@ public:
     }
 };
 
-#if 0
+#if LOCAL || ONLINE_JUDGE
 #include <cstdio>
 #define read() ({int x,c,f=1;while((c=getchar())<48||57<c)if(c=='-')f=-1;for(x=c^48;47<(c=getchar())&&c<58;x=x*10+(c^48));x*f; })
 Treap<int> t;
